@@ -27,10 +27,10 @@ int main()
 	{
 		if(newNum % i == 0)
 		{
-//		primes[j] = i;
-		printf("%lld\n",i);
-		newNum = newNum / i;
-//		j++;
+//			primes[j] = i;
+			printf("%lld\n",i);
+			newNum = newNum / i;
+//			j++;
 		}
 		else
 		{
@@ -40,7 +40,7 @@ int main()
 //	for(j=0; primes[j] != 0; j++)
 //		printf("d%\n",primes[j]);
 	char c;
-	printf("Press any key to continue...");
+	printf("Press enter to exit\n");
 	scanf("%*2c", &c);
 
 	return 0;
