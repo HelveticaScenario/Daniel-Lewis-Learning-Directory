@@ -45,7 +45,8 @@ int main()
             printf("\nINVALID MOVE!\n");
             error=0;
         }
-        scanf(" %c%c %c%c",&e,&f,&g,&h);
+        fflush(stdin);
+        scanf("%c%c %c%c",&e,&f,&g,&h);
         a=toupper(e)-64;
         c=toupper(g)-64;
         b=f-48;
