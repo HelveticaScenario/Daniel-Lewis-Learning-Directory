@@ -20,7 +20,7 @@ int testQueen(int, int, int, int, int[COLS][ROWS]);
 int testKing(int, int, int, int, int[COLS][ROWS]);
 
 
-int currentTurn = 0;
+int currentTurn = 1;
 //0 means the next turn is White's move, 1 means Black's move. This value determines who's pieces the user input for the turn can manipulate as well as the orientation the board prints as.
 
 int main()
@@ -29,7 +29,6 @@ int main()
 	createBoard(Board);
 	int end=0; //0 means game still in progress, 1 means white wins, -1 means black wins
 	int error=0;
-	int result=0;
 	while(end==0)
 	{
         system("cls");
@@ -70,17 +69,13 @@ int main()
             error=1;
             continue;
         }
-        result = verifyMove(a,b,c,d,Board);
-        if(result == 1)
+        if(verifyMove(a,b,c,d,Board)==1)
         {
             error=1;
             continue;
         }
-        if(result == 0)
-        {
-            if(Board[c][d]==12) end=1;
-            else if(Board[c][d]==6) end=-1;
-        }
+        if(Board[c][d]==12) end=1;
+        else if(Board[c][d]==6) end=-1;
         Board[c][d]=Board[a][b];
         Board[a][b]=0;
 //        Board[a][b]=13;
@@ -117,9 +112,9 @@ void createBoard(int board[COLS][ROWS])
                 board[i][j] = 9; //Black Bishops
 			else if(j==8 && (i==1 || i==8))
                 board[i][j] = 10; //Black Rooks
-            else if(j==8 && i==4)
-                board[i][j] = 11; //Black Queen
             else if(j==8 && i==5)
+                board[i][j] = 11; //Black Queen
+            else if(j==8 && i==4)
                 board[i][j] = 12; //Black King
             else if(j==2)
                 board[i][j] = 1; //White Pawns
@@ -129,9 +124,9 @@ void createBoard(int board[COLS][ROWS])
                 board[i][j] = 3; //White Bishops
             else if(j==1 && (i==1 || i==8))
                 board[i][j] = 4; //White Rooks
-            else if(j==1 && i==4)
-                board[i][j] = 5; //White Queen
             else if(j==1 && i==5)
+                board[i][j] = 5; //White Queen
+            else if(j==1 && i==4)
                 board[i][j] = 6; //White King
 			else
                 board[i][j] = 0; //Alternating Colored Blank Squares
@@ -243,13 +238,13 @@ int verifyMove(int a, int b, int c, int d, int board[COLS][ROWS])
         case 1: x = (testPawn(a, b, c, d, board));
 //        case 2: x = (testKnight(a, b, c, d, board));
 //        case 3: x = (testBishop(a, b, c, d, board));
-        case 4: x = (testRook(a, b, c, d, board));
+//        case 4: x = (testRook(a, b, c, d, board));
 //        case 5: x = (testQueen(a, b, c, d, board));
 //        case 6: x = (testKing(a, b, c, d, board));
         case 7: x = (testPawn(a, b, c, d, board));
 //        case 8: x = (testKnight(a, b, c, d, board));
 //        case 9: x = (testBishop(a, b, c, d, board));
-        case 10: x = (testRook(a, b, c, d, board));
+//        case 10: x = (testRook(a, b, c, d, board));
 //        case 11: x = (testQueen(a, b, c, d, board));
 //        case 12: x = (testKing(a, b, c, d, board));
 
@@ -260,212 +255,44 @@ int verifyMove(int a, int b, int c, int d, int board[COLS][ROWS])
 int testPawn(int a, int b, int c, int d, int board[COLS][ROWS])
 {
     if(board[a][b]==1 && currentTurn==0)
-    {
-        if(c==a)
         {
+        if(c==a)
+            {
             if(d==4 && b==2 && board[c][3]==0)
                 return 0;
             else if(d==(b+1) && board[c][d]==0)
                 return 0;
             else
                 return 1;
-        }
+            }
         else if((c==(a+1) || c==(a-1)) && d==(b+1) && board[c][d]>=7)
             return 0;
         else
             return 1;
-    }
+        }
     else if(board[a][b]==7 && currentTurn==1)
-    {
-        if(c==a)
         {
+        if(c==a)
+            {
             if(d==5 && b==7 && board[c][6]==0)
                 return 0;
             else if(d==(b-1) && board[c][d]==0)
                 return 0;
             else
                 return 1;
-        }
+            }
         else if((c==(a+1) || c==(a-1)) && d==(b-1) && board[c][d]<=6 && board[c][d]>=1)
             return 0;
         else
             return 1;
-    }
+        }
     else
         return 1;
 }
 
-int testRook(int a, int b, int c, int d, int board[COLS][ROWS])
-{
-    if(board[a][b]==4 && currentTurn==0)
-    {
-        if(board[c][d]==6 && c==5 && d==1 && b==1)
-        {
-            if(a==1 && board[2][1]==0 && board[3][1]==0 && board[4][1]==0)
-            {
-                board[4][1]=6;
-                return 2;
-            }
-            else if(a==8 && board[7][1]==0 && board[6][1]==0)
-            {
-                board[6][1]=6;
-                return 2;
-            }
-            else
-                return 1;
-        }
-        else if(board[c][d]==0 || board[c][d]>=7)
-        {
-            if(c==a && d!=b)
-            {
-                if(d>b)
-                {
-                    if(d==(b+1))
-                        return 0;
-                    int i=(d-1);
-                    do {
-                        if(board[a][i]>0)
-                            return 1;
-                        i=(i-1);
-                    }   while(i>b);
-                    return 0;
-                }
-                else if(d<b)
-                {
-                    if(d==(b-1))
-                        return 0;
-                    int i=(d+1);
-                    do {
-                        if(board[a][i]>0)
-                            return 1;
-                        i=(i+1);
-                    }   while(i<b);
-                    return 0;
-                }
-                else
-                    return 1;
-            }
-            else if(d==b && c!=a)
-            {
-                if(c>a)
-                {
-                    if(c==(a+1))
-                        return 0;
-                    int i=(c-1);
-                    do {
-                        if(board[i][b]>0)
-                            return 1;
-                        i=(i-1);
-                    }   while(i>a);
-                    return 0;
-                }
-                else if(c<a)
-                {
-                    if(c==(a-1))
-                        return 0;
-                    int i=(c+1);
-                    do {
-                        if(board[i][b]>0)
-                            return 1;
-                        i=(i+1);
-                    }   while(i<a);
-                    return 0;
-                }
-                else
-                    return 1;
-            }
-            else
-                return 1;
-        }
-        else
-            return 1;
-    }
-    else if(board[a][b]==10 && currentTurn==1)
-    {
-        if(board[c][d]==12 && c==5 && d==8 && b==8)
-        {
-            if(a==1 && board[2][8]==0 && board[3][8]==0 && board[4][8]==0)
-            {
-                board[4][8]=12;
-                return 2;
-            }
-            else if(a==8 && board[7][8]==0 && board[6][8]==0)
-            {
-                board[6][8]=12;
-                return 2;
-            }
-            else
-                return 1;
-        }
-        else if(board[c][d]>=0 && board[c][d]<=6)
-        {
-            if(c==a && d!=b)
-            {
-                if(d>b)
-                {
-                    if(d==(b+1))
-                        return 0;
-                    int i=(d-1);
-                    do {
-                        if(board[a][i]>0)
-                            return 1;
-                        i=(i-1);
-                    }   while(i>b);
-                    return 0;
-                }
-                else if(d<b)
-                {
-                    if(d==(b-1))
-                        return 0;
-                    int i=(d+1);
-                    do {
-                        if(board[a][i]>0)
-                            return 1;
-                        i=(i+1);
-                    }   while(i<b);
-                    return 0;
-                }
-                else
-                    return 1;
-            }
-            else if(d==b && c!=a)
-            {
-                if(c>a)
-                {
-                    if(c==(a+1))
-                        return 0;
-                    int i=(c-1);
-                    do {
-                        if(board[i][b]>0)
-                            return 1;
-                        i=(i-1);
-                    }   while(i>a);
-                    return 0;
-                }
-                else if(c<a)
-                {
-                    if(c==(a-1))
-                        return 0;
-                    int i=(c+1);
-                    do {
-                        if(board[i][b]>0)
-                            return 1;
-                        i=(i+1);
-                    }   while(i<a);
-                    return 0;
-                }
-                else
-                    return 1;
-            }
-            else
-                return 1;
-        }
-        else
-            return 1;
-    }
-    else
-        return 1;
-}
+
+
+
 
 
 
