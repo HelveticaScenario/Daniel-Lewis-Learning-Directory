@@ -235,23 +235,24 @@ void printBoardBlack(int board[COLS][ROWS])
 int verifyMove(int a, int b, int c, int d, int board[COLS][ROWS])
 {
     int x;
-    switch(board[a][b])
+    x = board[a][b];
+    switch(x)
     {
-        case -2: x =  1;
-        case -1: x =  1;
-        case 0: x =  1;
-        case 1: x = (testPawn(a, b, c, d, board));
-//        case 2: x = (testKnight(a, b, c, d, board));
-//        case 3: x = (testBishop(a, b, c, d, board));
-        case 4: x = (testRook(a, b, c, d, board));
-//        case 5: x = (testQueen(a, b, c, d, board));
-//        case 6: x = (testKing(a, b, c, d, board));
-        case 7: x = (testPawn(a, b, c, d, board));
-//        case 8: x = (testKnight(a, b, c, d, board));
-//        case 9: x = (testBishop(a, b, c, d, board));
-        case 10: x = (testRook(a, b, c, d, board));
-//        case 11: x = (testQueen(a, b, c, d, board));
-//        case 12: x = (testKing(a, b, c, d, board));
+        case -2: x =  1; break;
+        case -1: x =  1; break;
+        case 0: x =  1; break;
+        case 1: x = (testPawn(a, b, c, d, board)); break;
+        case 2: x = 0; break; //(testKnight(a, b, c, d, board)); break;
+        case 3: x = 0; break; //(testBishop(a, b, c, d, board)); break;
+        case 4: x = (testRook(a, b, c, d, board)); break;
+        case 5: x = 0; break; //(testQueen(a, b, c, d, board)); break;
+        case 6: x = 0; break; //(testKing(a, b, c, d, board)); break;
+        case 7: x = (testPawn(a, b, c, d, board)); break;
+        case 8: x = 0; break; //(testKnight(a, b, c, d, board)); break;
+        case 9: x = 0; break; //(testBishop(a, b, c, d, board)); break;
+        case 10: x = (testRook(a, b, c, d, board)); break;
+        case 11: x = 0; break; //(testQueen(a, b, c, d, board)); break;
+        case 12: x = 0; break; //(testKing(a, b, c, d, board)); break;
 
     }
     return(x);
