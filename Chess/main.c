@@ -304,17 +304,17 @@ int verifyMove(int a, int b, int c, int d, int board[COLS][ROWS])
         case -1: x =  1; break;
         case 0: x =  1; break;
         case 1: x = (testPawn(a, b, c, d, board)); break;
-        case 2: x = 0; break; //(testKnight(a, b, c, d, board)); break;
+        case 2: x = (testKnight(a, b, c, d, board)); break;
         case 3: x = (testBishop(a, b, c, d, board)); break;
         case 4: x = (testRook(a, b, c, d, board)); break;
-        case 5: x = 0; break; //(testQueen(a, b, c, d, board)); break;
-        case 6: x = 0; break; //(testKing(a, b, c, d, board)); break;
+        case 5: x = (testQueen(a, b, c, d, board)); break;
+        case 6: x = (testKing(a, b, c, d, board)); break;
         case 7: x = (testPawn(a, b, c, d, board)); break;
-        case 8: x = 0; break; //(testKnight(a, b, c, d, board)); break;
+        case 8: x = (testKnight(a, b, c, d, board)); break;
         case 9: x = (testBishop(a, b, c, d, board)); break;
         case 10: x = (testRook(a, b, c, d, board)); break;
-        case 11: x = 0; break; //(testQueen(a, b, c, d, board)); break;
-        case 12: x = 0; break; //(testKing(a, b, c, d, board)); break;
+        case 11: x = (testQueen(a, b, c, d, board)); break;
+        case 12: x = (testKing(a, b, c, d, board)); break;
 
     }
     return(x);
@@ -1363,5 +1363,28 @@ int testKing(int a, int b, int c, int d, int board[COLS][ROWS])
         return 1;
 }
 
+int testKnight(int a, int b, int c, int d, int board[COLS][ROWS])
+{
+    if(board[a][b]==2 && currentTurn==0 && (board[c][d]<=0 || board[c][d]>=7))
+    {
+        if((c==(a+1) && (d==(b+2) || d==(b-2))) || ((c==(a-1)) && (d==(b+2) || d==(b-2))) || ((d==(b+1)) && (c==(a+2) || c==(a-2))) || ((d==(b-1)) && (c==(a+2) || c==(a-2))))
+        {
+            return 0;
+        }
+        else
+            return 1;
+    }
+    else if(board[a][b]==8 && currentTurn==1 && board[c][d]<=6)
+    {
+        if((c==(a+1) && (d==(b+2) || d==(b-2))) || ((c==(a-1)) && (d==(b+2) || d==(b-2))) || ((d==(b+1)) && (c==(a+2) || c==(a-2))) || ((d==(b-1)) && (c==(a+2) || c==(a-2))))
+        {
+            return 0;
+        }
+        else
+            return 1;
+    }
+    else
+        return 1;
+}
 
 
