@@ -19,7 +19,7 @@ int testRook(int, int, int, int, int[COLS][ROWS]);
 int testQueen(int, int, int, int, int[COLS][ROWS]);
 int testKing(int, int, int, int, int[COLS][ROWS]);
 
-
+int promote=0;
 int currentTurn = 0;
 //0 means the next turn is White's move, 1 means Black's move. This value determines who's pieces the user input for the turn can manipulate as well as the orientation the board prints as.
 
@@ -30,12 +30,14 @@ int main()
 	int end=0; //0 means game still in progress, 1 means white wins, -1 means black wins
 	int error=0;
 	int result=0;
+	int a,b,c,d;
+    char e,f,g,h;
 	while(end==0)
 	{
+        if(promote==0)
+        {
         system("cls");
-        int a,b,c,d;
-        char e,f,g,h;
-        printf("WELCOME TO CHESS! I'M SO EXCITED! %d\n\n", end);
+        printf("WELCOME TO CHESS! I'M SO EXCITED!\n\n");
         if(currentTurn==0)
             printBoardWhite(Board);
         else
@@ -52,18 +54,47 @@ int main()
         c=toupper(g)-64;
         b=f-48;
         d=h-48;
-        printf("%d %d %d %d     %c %c %c %c\n",a,b,c,d,e,f,g,h);
-        if(a<1 || a>8 || b<1 || b>8 || c<1 || c>8 || d<1 || d>8)
+        //printf("%d %d %d %d     %c %c %c %c\n",a,b,c,d,e,f,g,h);
+        if(a<1 || a>8)
         {
-            b=toupper(e)-64;
-            d=toupper(g)-64;
             a=f-48;
-            c=h-48;
-            if(a<1 || a>8 || b<1 || b>8 || c<1 || c>8 || d<1 || d>8)
+            if(a<1 || a>8)
             {
                 error=1;
                 continue;
             }
+        }
+        if(b<1 || b>8)
+        {
+            b=toupper(e)-64;
+            if(b<1 || b>8)
+            {
+                error=1;
+                continue;
+            }
+        }
+        if(c<1 || c>8)
+        {
+            c=h-48;
+            if(c<1 || c>8)
+            {
+                error=1;
+                continue;
+            }
+        }
+        if(d<1 || d>8)
+        {
+            d=toupper(g)-64;
+            if(d<1 || d>8)
+            {
+                error=1;
+                continue;
+            }
+        }
+        if(a==c && b==d)
+        {
+            error=1;
+            continue;
         }
         if(Board[c][d]<-2 || Board[c][d]>12 || Board[a][b]<-2 || Board[a][b]>12)
         {
@@ -83,6 +114,32 @@ int main()
         }
         Board[c][d]=Board[a][b];
         Board[a][b]=0;
+        }
+        if(promote==1)
+        {
+            printf("Congratulations! Which piece type do you want your\npawn to now become?\n1. A ROOK\n2. A BISHOP\n3. A KNIGHT\n4. A QUEEN\n> ");
+            int choice;
+            fflush(stdin);
+            scanf("%d", &choice);
+            if(choice<=0 || choice>=5)
+                continue;
+            switch(choice)
+            {
+                case 1: if(currentTurn==0)Board[c][d]=4;
+                        else Board[c][d]=10;
+                        break;
+                case 2: if(currentTurn==0)Board[c][d]=3;
+                        else Board[c][d]=9;
+                        break;
+                case 3: if(currentTurn==0)Board[c][d]=2;
+                        else Board[c][d]=8;
+                        break;
+                case 4: if(currentTurn==0)Board[c][d]=5;
+                        else Board[c][d]=11;
+                        break;
+            }
+            promote=0;
+        }
 //        Board[a][b]=13;
 //        Board[c][d]=13;
         if(currentTurn==0)currentTurn=1;
@@ -243,13 +300,13 @@ int verifyMove(int a, int b, int c, int d, int board[COLS][ROWS])
         case 0: x =  1; break;
         case 1: x = (testPawn(a, b, c, d, board)); break;
         case 2: x = 0; break; //(testKnight(a, b, c, d, board)); break;
-        case 3: x = 0; break; //(testBishop(a, b, c, d, board)); break;
+        case 3: x = (testBishop(a, b, c, d, board)); break;
         case 4: x = (testRook(a, b, c, d, board)); break;
         case 5: x = 0; break; //(testQueen(a, b, c, d, board)); break;
         case 6: x = 0; break; //(testKing(a, b, c, d, board)); break;
         case 7: x = (testPawn(a, b, c, d, board)); break;
         case 8: x = 0; break; //(testKnight(a, b, c, d, board)); break;
-        case 9: x = 0; break; //(testBishop(a, b, c, d, board)); break;
+        case 9: x = (testBishop(a, b, c, d, board)); break;
         case 10: x = (testRook(a, b, c, d, board)); break;
         case 11: x = 0; break; //(testQueen(a, b, c, d, board)); break;
         case 12: x = 0; break; //(testKing(a, b, c, d, board)); break;
@@ -265,14 +322,26 @@ int testPawn(int a, int b, int c, int d, int board[COLS][ROWS])
         if(c==a)
         {
             if(d==4 && b==2 && board[c][3]==0)
+                {
+                if(d==8)
+                    promote = 1;
                 return 0;
+                }
             else if(d==(b+1) && board[c][d]==0)
+                {
+                if(d==8)
+                    promote = 1;
                 return 0;
+                }
             else
                 return 1;
         }
         else if((c==(a+1) || c==(a-1)) && d==(b+1) && board[c][d]>=7)
-            return 0;
+            {
+                if(d==8)
+                    promote = 1;
+                return 0;
+            }
         else
             return 1;
     }
@@ -281,14 +350,26 @@ int testPawn(int a, int b, int c, int d, int board[COLS][ROWS])
         if(c==a)
         {
             if(d==5 && b==7 && board[c][6]==0)
+                {
+                    if(d==1)
+                    promote = 1;
                 return 0;
+                }
             else if(d==(b-1) && board[c][d]==0)
+                {
+                    if(d==1)
+                    promote = 1;
                 return 0;
+                }
             else
                 return 1;
         }
         else if((c==(a+1) || c==(a-1)) && d==(b-1) && board[c][d]<=6 && board[c][d]>=1)
-            return 0;
+            {
+                if(d==1)
+                    promote = 1;
+                return 0;
+            }
         else
             return 1;
     }
@@ -457,6 +538,455 @@ int testRook(int a, int b, int c, int d, int board[COLS][ROWS])
                 }
                 else
                     return 1;
+            }
+            else
+                return 1;
+        }
+        else
+            return 1;
+    }
+    else
+        return 1;
+}
+
+int testBishop(int a, int b, int c, int d, int board[COLS][ROWS])
+{
+    if(board[a][b]==3 && currentTurn==0 && (board[c][d]<=0 || board[c][d]>=7))
+    {
+        int xdif,ydif;
+        xdif = (a-c);
+        ydif = (b-d);
+        if((xdif*xdif) == (ydif*ydif))
+        {
+            int i,j;
+            if(xdif<0)
+            {
+                i=(c+1);
+                if(ydif<0)
+                {
+                    if(xdif==-1 && ydif==-1)
+                        return 0;
+                    j=(d+1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i--;
+                        j--;
+                    }while(i<a && j<b);
+                    return 0;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==-1 && ydif==1)
+                        return 0;
+                    j=(d-1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i--;
+                        j++;
+                    }while(i<a && j>b);
+                    return 0;
+                }
+                else
+                    return 1;
+            }
+            else if(xdif>0)
+            {
+                i=(c-1);
+                if(ydif<0)
+                {
+                    if(xdif==1 && ydif==-1)
+                        return 0;
+                    j=(d+1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i++;
+                        j--;
+                    }while(i>a && j<b);
+                    return 0;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==1 && ydif==1)
+                        return 0;
+                    j=(d-1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i++;
+                        j++;
+                    }while(i>a && j>b);
+                    return 0;
+                }
+                else
+                    return 1;
+            }
+        }
+        else
+            return 1;
+    }
+    else if(board[a][b]==9 && currentTurn==1 && board[c][d]<=6)
+    {
+        int xdif,ydif;
+        xdif = (a-c);
+        ydif = (b-d);
+        if((xdif*xdif) == (ydif*ydif))
+        {
+            int i,j;
+            if(xdif<0)
+            {
+                i=(c+1);
+                if(ydif<0)
+                {
+                    if(xdif==-1 && ydif==-1)
+                        return 0;
+                    j=(d+1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i--;
+                        j--;
+                    }while(i<a && j<b);
+                    return 0;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==-1 && ydif==1)
+                        return 0;
+                    j=(d-1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i--;
+                        j++;
+                    }while(i<a && j>b);
+                    return 0;
+                }
+                else
+                    return 1;
+            }
+            else if(xdif>0)
+            {
+                i=(c-1);
+                if(ydif<0)
+                {
+                    if(xdif==1 && ydif==-1)
+                        return 0;
+                    j=(d+1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i++;
+                        j--;
+                    }while(i>a && j<b);
+                    return 0;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==1 && ydif==1)
+                        return 0;
+                    j=(d-1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i++;
+                        j++;
+                    }while(i>a && j>b);
+                    return 0;
+                }
+                else
+                    return 1;
+            }
+        }
+        else
+            return 1;
+    }
+    else
+        return 1;
+}
+
+int testQueen(int a, int b, int c, int d, int board[COLS][ROWS])
+{
+    if(board[a][b]==5 && currentTurn==0 && (board[c][d]<=0 || board[c][d]>=7))
+    {
+        int xdif,ydif;
+        xdif = (a-c);
+        ydif = (b-d);
+        if((xdif*xdif) == (ydif*ydif))
+        {
+            int i,j;
+            if(xdif<0)
+            {
+                i=(c+1);
+                if(ydif<0)
+                {
+                    if(xdif==-1 && ydif==-1)
+                        return 0;
+                    j=(d+1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i--;
+                        j--;
+                    }while(i<a && j<b);
+                    return 0;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==-1 && ydif==1)
+                        return 0;
+                    j=(d-1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i--;
+                        j++;
+                    }while(i<a && j>b);
+                    return 0;
+                }
+                else
+                    return 1;
+            }
+            else if(xdif>0)
+            {
+                i=(c-1);
+                if(ydif<0)
+                {
+                    if(xdif==1 && ydif==-1)
+                        return 0;
+                    j=(d+1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i++;
+                        j--;
+                    }while(i>a && j<b);
+                    return 0;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==1 && ydif==1)
+                        return 0;
+                    j=(d-1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i++;
+                        j++;
+                    }while(i>a && j>b);
+                    return 0;
+                }
+                else
+                    return 1;
+            }
+        }
+        else if(c==a && d!=b)
+        {
+            if(d>b)
+            {
+                if(d==(b+1))
+                    return 0;
+                int i=(d-1);
+                do {
+                    if(board[a][i]>0)
+                        return 1;
+                    i=(i-1);
+                }   while(i>b);
+                return 0;
+            }
+            else if(d<b)
+            {
+                if(d==(b-1))
+                    return 0;
+                int i=(d+1);
+                do {
+                    if(board[a][i]>0)
+                        return 1;
+                    i=(i+1);
+                }   while(i<b);
+                return 0;
+            }
+            else
+                return 1;
+            }
+        else if(d==b && c!=a)
+        {
+            if(c>a)
+            {
+                if(c==(a+1))
+                    return 0;
+                int i=(c-1);
+                do {
+                    if(board[i][b]>0)
+                        return 1;
+                    i=(i-1);
+                }   while(i>a);
+                return 0;
+            }
+            else if(c<a)
+            {
+                if(c==(a-1))
+                    return 0;
+                int i=(c+1);
+                do {
+                    if(board[i][b]>0)
+                        return 1;
+                    i=(i+1);
+                }   while(i<a);
+                return 0;
+            }
+            else
+                return 1;
+        }
+        else
+            return 1;
+
+    }
+    else if(board[a][b]==11 && currentTurn==1 && board[c][d]<=6)
+    {
+        int xdif,ydif;
+        xdif = (a-c);
+        ydif = (b-d);
+        if((xdif*xdif) == (ydif*ydif))
+        {
+            int i,j;
+            if(xdif<0)
+            {
+                i=(c+1);
+                if(ydif<0)
+                {
+                    if(xdif==-1 && ydif==-1)
+                        return 0;
+                    j=(d+1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i--;
+                        j--;
+                    }while(i<a && j<b);
+                    return 0;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==-1 && ydif==1)
+                        return 0;
+                    j=(d-1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i--;
+                        j++;
+                    }while(i<a && j>b);
+                    return 0;
+                }
+                else
+                    return 1;
+            }
+            else if(xdif>0)
+            {
+                i=(c-1);
+                if(ydif<0)
+                {
+                    if(xdif==1 && ydif==-1)
+                        return 0;
+                    j=(d+1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i++;
+                        j--;
+                    }while(i>a && j<b);
+                    return 0;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==1 && ydif==1)
+                        return 0;
+                    j=(d-1);
+                    do
+                    {
+                        if(board[i][j]>=1)
+                            return 1;
+                        i++;
+                        j++;
+                    }while(i>a && j>b);
+                    return 0;
+                }
+                else
+                    return 1;
+            }
+        }
+        else if(c==a && d!=b)
+        {
+            if(d>b)
+            {
+                if(d==(b+1))
+                    return 0;
+                int i=(d-1);
+                do {
+                    if(board[a][i]>0)
+                        return 1;
+                    i=(i-1);
+                }   while(i>b);
+                return 0;
+            }
+            else if(d<b)
+            {
+                if(d==(b-1))
+                    return 0;
+                int i=(d+1);
+                do {
+                    if(board[a][i]>0)
+                        return 1;
+                    i=(i+1);
+                }   while(i<b);
+                return 0;
+            }
+            else
+                return 1;
+            }
+        else if(d==b && c!=a)
+        {
+            if(c>a)
+            {
+                if(c==(a+1))
+                    return 0;
+                int i=(c-1);
+                do {
+                    if(board[i][b]>0)
+                        return 1;
+                    i=(i-1);
+                }   while(i>a);
+                return 0;
+            }
+            else if(c<a)
+            {
+                if(c==(a-1))
+                    return 0;
+                int i=(c+1);
+                do {
+                    if(board[i][b]>0)
+                        return 1;
+                    i=(i+1);
+                }   while(i<a);
+                return 0;
             }
             else
                 return 1;
