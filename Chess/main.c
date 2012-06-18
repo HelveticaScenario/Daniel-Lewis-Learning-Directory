@@ -21,6 +21,7 @@ int testKing(int, int, int, int, int[COLS][ROWS]);
 
 int promote=0;
 int currentTurn = 0;
+int invalidinput = 0;
 //0 means the next turn is White's move, 1 means Black's move. This value determines who's pieces the user input for the turn can manipulate as well as the orientation the board prints as.
 
 int main()
@@ -36,84 +37,88 @@ int main()
 	{
         if(promote==0)
         {
-        system("cls");
-        printf("WELCOME TO CHESS! I'M SO EXCITED!\n\n");
-        if(currentTurn==0)
-            printBoardWhite(Board);
-        else
-            printBoardBlack(Board);
-        printf("Please type in the coordinates of the \npiece you would like to move, followed by a\nspace, and the coordinates of destination.\nBoth uppercase and lowercase letters work.\n");
-        if(error==1)
-        {
-            printf("\nINVALID MOVE!\n");
-            error=0;
-        }
-        fflush(stdin);
-        scanf("%c%c %c%c",&e,&f,&g,&h);
-        a=toupper(e)-64;
-        c=toupper(g)-64;
-        b=f-48;
-        d=h-48;
-        //printf("%d %d %d %d     %c %c %c %c\n",a,b,c,d,e,f,g,h);
-        if(a<1 || a>8)
-        {
-            a=f-48;
+            system("cls");
+            printf("WELCOME TO CHESS! I'M SO EXCITED!\n\n");
+            if(currentTurn==0)
+                printBoardWhite(Board);
+            else
+                printBoardBlack(Board);
+            printf("Please type in the coordinates of the \npiece you would like to move, followed by a\nspace, and the coordinates of destination.\nBoth uppercase and lowercase letters work.\n");
+            if(error==1)
+            {
+                printf("\nINVALID MOVE!\n");
+                error=0;
+            }
+            if(invalidinput==0)
+            {
+                fflush(stdin);
+                scanf("%c%c %c%c",&e,&f,&g,&h);
+                a=toupper(e)-64;
+                c=toupper(g)-64;
+                b=f-48;
+                d=h-48;
+            }
+            //printf("%d %d %d %d     %c %c %c %c\n",a,b,c,d,e,f,g,h);
             if(a<1 || a>8)
             {
-                error=1;
-                continue;
+                a=f-48;
+                if(a<1 || a>8)
+                {
+                    error=1;
+                    continue;
+                }
             }
-        }
-        if(b<1 || b>8)
-        {
-            b=toupper(e)-64;
             if(b<1 || b>8)
             {
-                error=1;
-                continue;
+                b=toupper(e)-64;
+                if(b<1 || b>8)
+                {
+                    error=1;
+                    continue;
+                }
             }
-        }
-        if(c<1 || c>8)
-        {
-            c=h-48;
             if(c<1 || c>8)
             {
-                error=1;
-                continue;
+                c=h-48;
+                if(c<1 || c>8)
+                {
+                    error=1;
+                    continue;
+                }
             }
-        }
-        if(d<1 || d>8)
-        {
-            d=toupper(g)-64;
             if(d<1 || d>8)
+            {
+                d=toupper(g)-64;
+                if(d<1 || d>8)
+                {
+                    error=1;
+                    continue;
+                }
+            }
+            if(a==c && b==d)
             {
                 error=1;
                 continue;
             }
-        }
-        if(a==c && b==d)
-        {
-            error=1;
-            continue;
-        }
-        if(Board[c][d]<-2 || Board[c][d]>12 || Board[a][b]<-2 || Board[a][b]>12)
-        {
-            error=1;
-            continue;
-        }
-        result = verifyMove(a,b,c,d,Board);
-        if(result == 1)
-        {
-            error=1;
-            continue;
-        }
-        if(result == 0)
-        {
+            if(Board[c][d]<-2 || Board[c][d]>12 || Board[a][b]<-2 || Board[a][b]>12)
+            {
+                error=1;
+                continue;
+            }
+            result = verifyMove(a,b,c,d,Board);
+            if(result == 1)
+            {
+                error=1;
+                continue;
+            }
+            if(result == 2)
+            {
+                continue;
+            }
             if(Board[c][d]==12) end=1;
             else if(Board[c][d]==6) end=-1;
-        }
-        Board[c][d]=Board[a][b];
-        Board[a][b]=0;
+            Board[c][d]=Board[a][b];
+            Board[a][b]=0;
         }
         if(promote==1)
         {
@@ -381,17 +386,56 @@ int testRook(int a, int b, int c, int d, int board[COLS][ROWS])
 {
     if(board[a][b]==4 && currentTurn==0)
     {
-        if(board[c][d]==6 && c==5 && d==1 && b==1)
+        if(board[5][1]==6 && b==1 && d==1)
         {
-            if(a==1 && board[2][1]==0 && board[3][1]==0 && board[4][1]==0)
+            if(a==1 && c==4 && board[2][1]==0 && board[3][1]==0 && board[4][1]==0)
             {
-                board[4][1]=6;
-                return 2;
+                printf("Would you like to castle? 1 for yes, 2 for no.");
+                int choice = 0;
+                fflush(stdin);
+                scanf("%d", &choice);
+                if(choice!=1 && choice!=2)
+                {
+                    invalidinput=1;
+                    return 2;
+                }
+                else if(choice==1)
+                {
+                    board[3][1]=6;
+                    board[5][1]=0;
+                    invalidinput=0;
+                    return 0;
+                }
+                else
+                {
+                    invalidinput=0;
+                    return 0;
+                }
+
             }
-            else if(a==8 && board[7][1]==0 && board[6][1]==0)
+            else if(a==8 && c==6 && board[7][1]==0 && board[6][1]==0)
             {
-                board[6][1]=6;
-                return 2;
+                printf("Would you like to castle? 1 for yes, 2 for no.");
+                int choice = 0;
+                fflush(stdin);
+                scanf("%d", &choice);
+                if(choice!=1 && choice!=2)
+                {
+                    invalidinput=1;
+                    return 2;
+                }
+                else if(choice==1)
+                {
+                    board[3][1]=6;
+                    board[5][1]=0;
+                    invalidinput=0;
+                    return 0;
+                }
+                else
+                {
+                    invalidinput=0;
+                    return 0;
+                }
             }
             else
                 return 1;
@@ -464,17 +508,56 @@ int testRook(int a, int b, int c, int d, int board[COLS][ROWS])
     }
     else if(board[a][b]==10 && currentTurn==1)
     {
-        if(board[c][d]==12 && c==5 && d==8 && b==8)
+        if(board[5][8]==12 && b==8 && d==8)
         {
-            if(a==1 && board[2][8]==0 && board[3][8]==0 && board[4][8]==0)
+            if(a==1 && c==4 && board[2][8]==0 && board[3][8]==0 && board[4][8]==0)
             {
-                board[4][8]=12;
-                return 2;
+                printf("Would you like to castle? 1 for yes, 2 for no.");
+                int choice = 0;
+                fflush(stdin);
+                scanf("%d", &choice);
+                if(choice!=1 && choice!=2)
+                {
+                    invalidinput=1;
+                    return 2;
+                }
+                else if(choice==1)
+                {
+                    board[3][8]=12;
+                    board[5][8]=0;
+                    invalidinput=0;
+                    return 0;
+                }
+                else
+                {
+                    invalidinput=0;
+                    return 0;
+                }
+
             }
-            else if(a==8 && board[7][8]==0 && board[6][8]==0)
+            else if(a==8 && c==6 && board[7][8]==0 && board[6][8]==0)
             {
-                board[6][8]=12;
-                return 2;
+                printf("Would you like to castle? 1 for yes, 2 for no.");
+                int choice = 0;
+                fflush(stdin);
+                scanf("%d", &choice);
+                if(choice!=1 && choice!=2)
+                {
+                    invalidinput=1;
+                    return 2;
+                }
+                else if(choice==1)
+                {
+                    board[3][8]=12;
+                    board[5][8]=0;
+                    invalidinput=0;
+                    return 0;
+                }
+                else
+                {
+                    invalidinput=0;
+                    return 0;
+                }
             }
             else
                 return 1;
@@ -998,6 +1081,287 @@ int testQueen(int a, int b, int c, int d, int board[COLS][ROWS])
         return 1;
 }
 
+int testKing(int a, int b, int c, int d, int board[COLS][ROWS])
+{
+    if(board[a][b]==6 && currentTurn==0 && (board[c][d]<=0 || board[c][d]>=7))
+    {
+        int xdif,ydif;
+        xdif = (a-c);
+        ydif = (b-d);
+        if(a==5 && b==1 && d==1)
+        {
+            if(c==3 && board[1][1]==4 && board[2][1]==0 && board[3][1]==0 && board[4][1]==0)
+            {
+                printf("Would you like to castle? 1 for yes, 2 for no.");
+                int choice = 0;
+                fflush(stdin);
+                scanf("%d", &choice);
+                if(choice!=1 && choice!=2)
+                {
+                    invalidinput=1;
+                    return 2;
+                }
+                else if(choice==1)
+                {
+                    board[4][1]=4;
+                    board[1][1]=0;
+                    invalidinput=0;
+                    return 0;
+                }
+                else
+                {
+                    invalidinput=0;
+                    return 0;
+                }
+
+            }
+            else if(c==7 && board[8][1]==4 && board[7][1]==0 && board[6][1]==0)
+            {
+                printf("Would you like to castle? 1 for yes, 2 for no.");
+                int choice = 0;
+                fflush(stdin);
+                scanf("%d", &choice);
+                if(choice!=1 && choice!=2)
+                {
+                    invalidinput=1;
+                    return 2;
+                }
+                else if(choice==1)
+                {
+                    board[6][1]=4;
+                    board[8][1]=0;
+                    invalidinput=0;
+                    return 0;
+                }
+                else
+                {
+                    invalidinput=0;
+                    return 0;
+                }
+            }
+            else
+                return 1;
+        }
+        else if((xdif*xdif) == (ydif*ydif))
+        {
+            if(xdif<0)
+            {
+                if(ydif<0)
+                {
+                    if(xdif==-1 && ydif==-1)
+                        return 0;
+                    else
+                        return 1;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==-1 && ydif==1)
+                        return 0;
+                    else
+                        return 1;
+                }
+                else
+                    return 1;
+            }
+            else if(xdif>0)
+            {
+                if(ydif<0)
+                {
+                    if(xdif==1 && ydif==-1)
+                        return 0;
+                    else
+                        return 1;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==1 && ydif==1)
+                        return 0;
+                    else
+                        return 1;
+                }
+                else
+                    return 1;
+            }
+        }
+        else if(c==a && d!=b)
+        {
+            if(d>b)
+            {
+                if(d==(b+1))
+                    return 0;
+                else
+                    return 1;
+            }
+            else if(d<b)
+            {
+                if(d==(b-1))
+                    return 0;
+                else
+                    return 1;            }
+            else
+                return 1;
+            }
+        else if(d==b && c!=a)
+        {
+            if(c>a)
+            {
+                if(c==(a+1))
+                    return 0;
+                else
+                    return 1;            }
+            else if(c<a)
+            {
+                if(c==(a-1))
+                    return 0;
+                else
+                    return 1;            }
+            else
+                return 1;
+        }
+        else
+            return 1;
+
+    }
+    else if(board[a][b]==12 && currentTurn==1 && board[c][d]<=6)
+    {
+        int xdif,ydif;
+        xdif = (a-c);
+        ydif = (b-d);
+        if(a==5 && b==8 && d==8)
+        {
+            if(c==3 && board[1][8]==10 && board[2][8]==0 && board[3][8]==0 && board[4][8]==0)
+            {
+                printf("Would you like to castle? 1 for yes, 2 for no.");
+                int choice = 0;
+                fflush(stdin);
+                scanf("%d", &choice);
+                if(choice!=1 && choice!=2)
+                {
+                    invalidinput=1;
+                    return 2;
+                }
+                else if(choice==1)
+                {
+                    board[4][8]=10;
+                    board[1][8]=0;
+                    invalidinput=0;
+                    return 0;
+                }
+                else
+                {
+                    invalidinput=0;
+                    return 0;
+                }
+
+            }
+            else if(c==7 && board[8][8]==10 && board[7][8]==0 && board[6][8]==0)
+            {
+                printf("Would you like to castle? 1 for yes, 2 for no.");
+                int choice = 0;
+                fflush(stdin);
+                scanf("%d", &choice);
+                if(choice!=1 && choice!=2)
+                {
+                    invalidinput=1;
+                    return 2;
+                }
+                else if(choice==1)
+                {
+                    board[6][8]=10;
+                    board[8][8]=0;
+                    invalidinput=0;
+                    return 0;
+                }
+                else
+                {
+                    invalidinput=0;
+                    return 0;
+                }
+            }
+            else
+                return 1;
+        }
+        else if((xdif*xdif) == (ydif*ydif))
+        {
+            if(xdif<0)
+            {
+                if(ydif<0)
+                {
+                    if(xdif==-1 && ydif==-1)
+                        return 0;
+                    else
+                        return 1;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==-1 && ydif==1)
+                        return 0;
+                    else
+                        return 1;
+                }
+                else
+                    return 1;
+            }
+            else if(xdif>0)
+            {
+                if(ydif<0)
+                {
+                    if(xdif==1 && ydif==-1)
+                        return 0;
+                    else
+                        return 1;
+                }
+                else if(ydif>0)
+                {
+                    if(xdif==1 && ydif==1)
+                        return 0;
+                    else
+                        return 1;
+                }
+                else
+                    return 1;
+            }
+        }
+        else if(c==a && d!=b)
+        {
+            if(d>b)
+            {
+                if(d==(b+1))
+                    return 0;
+                else
+                    return 1;            }
+            else if(d<b)
+            {
+                if(d==(b-1))
+                    return 0;
+                else
+                    return 1;            }
+            else
+                return 1;
+            }
+        else if(d==b && c!=a)
+        {
+            if(c>a)
+            {
+                if(c==(a+1))
+                    return 0;
+                else
+                    return 1;            }
+            else if(c<a)
+            {
+                if(c==(a-1))
+                    return 0;
+                else
+                    return 1;            }
+            else
+                return 1;
+        }
+        else
+            return 1;
+    }
+    else
+        return 1;
+}
 
 
 
