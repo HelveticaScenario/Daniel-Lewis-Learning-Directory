@@ -54,7 +54,7 @@ int main()
             }
             if(error==1)
             {
-                printf("\nINVALID MOVE!\n");
+                printf("\n           INVALID MOVE!\n");
                 error=0;
             }
             if(invalidinput==0)
@@ -169,8 +169,8 @@ int main()
         if(currentTurn==0)currentTurn=1;
         else if(currentTurn==1)currentTurn=0;
     }
-    if(end==1)printf("\n\nWHITE WINS!\n");
-    else if(end==-1)printf("\n\nBLACK WINS!\n");
+    if(end==1)printf("\n\n           WHITE WINS!\n");
+    else if(end==-1)printf("\n\n           BLACK WINS!\n");
 
 //    printBoardBlack(Board);
 //    putchar('\n');
@@ -232,8 +232,9 @@ void printBoardWhite(int board[COLS][ROWS])
 		{
 			switch(board[i][j])
 			{
-			    case -2: putchar('@'); putchar(' '); break;
-			    case -1: if((i==0 || i==9) && (j!=0 && j!=9))
+			    case -2: printf("       "); putchar('@'); putchar(' '); break;
+			    case -1:if(i==0) printf("       ");
+                        if((i==0 || i==9) && (j!=0 && j!=9))
 //                            {putchar(j+48); putchar(' '); break;}
                             {putchar(j+48); putchar(' '); break;}
                         else if((j==0 || j==9) && (i!=0 && i!=9))
@@ -265,7 +266,7 @@ void printBoardWhite(int board[COLS][ROWS])
 		}
 		putchar('\n');
 	}
-    printf("White's Move\n\n");
+    printf("           White's Move\n\n");
 
 }
 
@@ -279,7 +280,8 @@ void printBoardBlack(int board[COLS][ROWS])
 			switch(board[i][j])
 			{
 			    case -2: putchar('@'); putchar(' '); break;
-			    case -1: if((i==0 || i==9) && (j!=0 && j!=9))
+			    case -1:if(i==9) printf("       ");
+                        if((i==0 || i==9) && (j!=0 && j!=9))
                             {putchar(j+48); putchar(' '); break;}
                         else if((j==0 || j==9) && (i!=0 && i!=9))
                             {putchar(i+64); putchar(' '); break;}
@@ -310,7 +312,7 @@ void printBoardBlack(int board[COLS][ROWS])
 		}
 		putchar('\n');
 	}
-    printf("Black's Move\n\n");
+    printf("           Black's Move\n\n");
 }
 
 int verifyMove(int a, int b, int c, int d, int board[COLS][ROWS])
