@@ -19,6 +19,7 @@ int testRook(int, int, int, int, int[COLS][ROWS]);
 int testQueen(int, int, int, int, int[COLS][ROWS]);
 int testKing(int, int, int, int, int[COLS][ROWS]);
 
+int printtext=0;
 int promote=0;
 int currentTurn = 0;
 int invalidinput = 0;
@@ -43,7 +44,14 @@ int main()
                 printBoardWhite(Board);
             else
                 printBoardBlack(Board);
-            printf("Please type in the coordinates of the \npiece you would like to move, followed by a\nspace, and the coordinates of destination.\nBoth uppercase and lowercase letters work.\n");
+            if(printtext<=1)
+            {
+                printf("Please type in the coordinates of the \npiece you would like to move, followed by a\nspace, and the coordinates of destination.\nBoth uppercase and lowercase letters work.\n");
+            }
+            if(printtext>=2)
+            {
+                printf("\nFor help text, type 'hh hh' without quotes\n");
+            }
             if(error==1)
             {
                 printf("\nINVALID MOVE!\n");
@@ -51,8 +59,14 @@ int main()
             }
             if(invalidinput==0)
             {
+                printf("> ");
                 fflush(stdin);
                 scanf("%c%c %c%c",&e,&f,&g,&h);
+                if(e=='h' && f=='h' && g=='h' && h=='h')
+                {
+                    printtext=1;
+                    continue;
+                }
                 a=toupper(e)-64;
                 c=toupper(g)-64;
                 b=f-48;
@@ -119,6 +133,11 @@ int main()
             else if(Board[c][d]==6) end=-1;
             Board[c][d]=Board[a][b];
             Board[a][b]=0;
+            if(printtext<=1)
+            {
+                printtext++;
+
+            }
         }
         if(promote==1)
         {
