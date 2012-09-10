@@ -38,7 +38,7 @@ int main()
 	{
         if(promote==0)
         {
-            system("cls");
+            system("clear");
             printf("WELCOME TO CHESS! I'M SO EXCITED!\n\n");
             if(currentTurn==0)
                 printBoardWhite(Board);

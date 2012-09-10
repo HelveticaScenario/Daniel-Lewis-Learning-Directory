@@ -1,0 +1,1 @@
+../../Cellar/sdl_mixer/1.2.12/include/SDL/SDL_mixer.h

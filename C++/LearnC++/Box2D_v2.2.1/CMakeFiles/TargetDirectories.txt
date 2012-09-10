@@ -1,0 +1,7 @@
+/Users/contrarian/github/local/Daniel-Lewis-Learning-Directory/C++/LearnC++/Box2D_v2.2.1/CMakeFiles/ALL_BUILD.dir
+/Users/contrarian/github/local/Daniel-Lewis-Learning-Directory/C++/LearnC++/Box2D_v2.2.1/Box2D/CMakeFiles/Box2D.dir
+/Users/contrarian/github/local/Daniel-Lewis-Learning-Directory/C++/LearnC++/Box2D_v2.2.1/HelloWorld/CMakeFiles/HelloWorld.dir
+/Users/contrarian/github/local/Daniel-Lewis-Learning-Directory/C++/LearnC++/Box2D_v2.2.1/Testbed/CMakeFiles/Testbed.dir
+/Users/contrarian/github/local/Daniel-Lewis-Learning-Directory/C++/LearnC++/Box2D_v2.2.1/CMakeFiles/ZERO_CHECK.dir
+/Users/contrarian/github/local/Daniel-Lewis-Learning-Directory/C++/LearnC++/Box2D_v2.2.1/freeglut/CMakeFiles/freeglut_static.dir
+/Users/contrarian/github/local/Daniel-Lewis-Learning-Directory/C++/LearnC++/Box2D_v2.2.1/glui/CMakeFiles/glui.dir
